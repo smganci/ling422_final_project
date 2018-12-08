@@ -48,7 +48,7 @@ while(<$file>){
 #maybe gives actual word
     if(syll_count($line{'cv_skeleton'})==1){
         # my $_=$line{'trans_b'}
-        if(/\[((.)[IE]([nm]))\]/){
+        if(/\[(()*+[IE]([nm]))\]/){
             if(exists $mp_hash{"$2$3"}){
                 my $len= @{$mp_hash{"$2$3"}};
                 if($len == 1){

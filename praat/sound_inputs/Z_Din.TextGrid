@@ -1,0 +1,46 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 0.49342403628117915 
+tiers? <exists> 
+size = 1 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "Z_Did" 
+        xmin = 0 
+        xmax = 0.49342403628117915 
+        intervals: size = 8 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.06462161862870547 
+            text = "onset" 
+        intervals [2]:
+            xmin = 0.06462161862870547 
+            xmax = 0.09483096480130969 
+            text = "1" 
+        intervals [3]:
+            xmin = 0.09483096480130969 
+            xmax = 0.12565157884098518 
+            text = "2" 
+        intervals [4]:
+            xmin = 0.12565157884098518 
+            xmax = 0.15527216823359133 
+            text = "3" 
+        intervals [5]:
+            xmin = 0.15527216823359133 
+            xmax = 0.18588158509085115 
+            text = "4" 
+        intervals [6]:
+            xmin = 0.18588158509085115 
+            xmax = 0.21505919227500497 
+            text = "5" 
+        intervals [7]:
+            xmin = 0.21505919227500497 
+            xmax = 0.24427571941968798 
+            text = "6" 
+        intervals [8]:
+            xmin = 0.24427571941968798 
+            xmax = 0.49342403628117915 
+            text = "coda" 

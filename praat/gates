@@ -1,3 +1,25 @@
+################################################################################
+#
+#Name: gates.praat
+#
+#Purpose: This script creates a series of "gates" given the selected
+# series of Sound objects
+#
+#Usage: To use this script you must first:
+#	1. Create a TextGrid Object for a particular sound
+#	2. Create and label intervals for that Sound and TextGrid pair
+# 	3. Extract all intervals from the Sound and TextGrid pair
+#	4. Select all generated Sound objects that you would like to be combined
+#	5. Either run this script directly
+#	   or create a button that links to the dynamic menu for Sound objects
+# 
+#
+#Contributors: S. Ganci, K. Elhajoui
+#
+################################################################################
+
+
+#Store a reference to the selected Sound objects
 sounds#= selected# ("Sound")
 
 #Create the first gate by selecting the first sound and copying it
