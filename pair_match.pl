@@ -16,7 +16,7 @@
 # S. Ganci * UNC-CH Ling 422 * 2018 Sept 10
 #
 ##########################
-use warnings; 
+use warnings;
 use utf8;
 use strict;
 #use List::MoreUtils qw(uniq);
@@ -25,9 +25,10 @@ use strict;
 my $file_arg;
 ($file_arg)=$ARGV[0];
 
-my $file;
+my $file; #basically STDIN
 open $file, '<',"$file_arg" or die "can't find file named $file_arg\n";
 
+my @cons = "pbfvwfvTDtdsznmlSZrjkgNh*\'";
 my @min_pairs;
 my %mp_hash;
 while(<$file>){
@@ -36,9 +37,9 @@ while(<$file>){
     my $var = $_;
     chomp $var;
     my  %line= processLine($var);
-    
+
     # foreach my $key (sort keys %line){
-    #    print "$key => $line{$key} \n"; 
+    #    print "$key => $line{$key} \n";
     # }
 
 
@@ -48,20 +49,20 @@ while(<$file>){
 #maybe gives actual word
     if(syll_count($line{'cv_skeleton'})==1){
         # my $_=$line{'trans_b'}
-        if(/\[(()*+[IE]([nm]))\]/){
+        if(/\[(([$consonant])*+[IE]:?([nm]))\]/){
             if(exists $mp_hash{"$2$3"}){
                 my $len= @{$mp_hash{"$2$3"}};
                 if($len == 1){
                     my $temp= @{$mp_hash{"$2$3"}}[$len-1];
                     if($temp ne $1){
-                        push @{$mp_hash{"$2$3"}}, $1; 
+                        push @{$mp_hash{"$2$3"}}, $1;
                     }
                 }
-               
+
             }else{
-                push @{$mp_hash{"$2$3"}}, $1; 
+                push @{$mp_hash{"$2$3"}}, $1;
             }
-            
+
           # push @min_pairs, $1;
         }
     }
@@ -75,7 +76,7 @@ foreach my $key (sort keys %mp_hash){
         print join ",\t", sort @{$mp_hash{$key}};
         print "\n";
     }
-    
+
 }
 
 
@@ -113,7 +114,7 @@ sub processLine {
 sub remove_duplicates {
     my @original= @_;
     my @out;
-    foreach my $elt (@original){ 
+    foreach my $elt (@original){
         if(@out==0){
             push @out, $elt;
         }else{
