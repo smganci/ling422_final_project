@@ -13,6 +13,8 @@
 
 # goal 2:
 # make software take input of two sounds and a *
+# TODO: modify script to select min pairs for both I and E 
+#maybe group by 1st letter and sort by last?
 
 # S. Ganci * UNC-CH Ling 422 * 2018 Sept 10
 #

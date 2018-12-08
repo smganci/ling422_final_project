@@ -1,0 +1,34 @@
+sounds#= selected# ("Sound")
+
+#Create the first gate by selecting the first sound and copying it
+selectObject: sounds# [1]
+Copy: "gate_1"
+
+#Create TextGrid for that first gate
+selectObject: "Sound gate_1"
+To TextGrid: "gate_1", ""
+
+for i from 2 to size (sounds#)
+	selectObject: sounds# [1]
+	for j from 2 to i
+		plusObject: sounds#[j]
+	endfor
+	#Concatenate all selected objects
+	Concatenate recoverably
+	
+	#Select newly generated "Sound chain"
+	selectObject: "Sound chain"
+
+	#Rename the Sound to "gate_#"
+	#The number of the gate should be one less than i
+	#gate_number=i-1
+	#gate_name$ will store the "gate_#"
+	gate_name$= "gate_"+string$(i)
+	Rename: gate_name$
+	
+	#Select the newly generated "TextGrid chain"
+	selectObject: "TextGrid chain"
+
+	#Rename the TextGrid to "gate_#"
+	Rename: gate_name$
+endfor
