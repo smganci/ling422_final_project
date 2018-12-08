@@ -19,9 +19,7 @@
 use warnings; 
 use utf8;
 use strict;
-#use List::MoreUtils qw(uniq);
 
-#my $search;
 my $file_arg;
 ($file_arg)=$ARGV[0];
 
@@ -30,36 +28,55 @@ open $file, '<',"$file_arg" or die "can't find file named $file_arg\n";
 
 my @min_pairs;
 my %mp_hash;
+my %cons_hash;
 while(<$file>){
-    # chomp;
-    # print "NEW WORD \n";
+ 
     my $var = $_;
     chomp $var;
     my  %line= processLine($var);
     
-    # foreach my $key (sort keys %line){
-    #    print "$key => $line{$key} \n"; 
-    # }
-
-
+    
+##consonant clusters
+# another if
 ##idea: could store hash of every first letter
 #add in some sort of class to account for the clusters igrnor other vowels
 #add more than just mono syllables
 #maybe gives actual word
     if(syll_count($line{'cv_skeleton'})==1){
         # my $_=$line{'trans_b'}
-        if(/\[(()*+[IE]([nm]))\]/){
-            if(exists $mp_hash{"$2$3"}){
-                my $len= @{$mp_hash{"$2$3"}};
+        #change to trans]
+        # print $line{'trans_b'};
+        if($line{'trans_b'}=~/\[((.*)[IE]:?([nm]))\]/){
+            # print $1;
+            if(exists $mp_hash{"$2\_$3"}){
+                my $len= @{$mp_hash{"$2\_$3"}};
                 if($len == 1){
-                    my $temp= @{$mp_hash{"$2$3"}}[$len-1];
+                    my $temp= @{$mp_hash{"$2\_$3"}}[$len-1];
                     if($temp ne $1){
-                        push @{$mp_hash{"$2$3"}}, $1; 
+                        push @{$mp_hash{"$2\_$3"}}, $1; 
                     }
                 }
                
             }else{
-                push @{$mp_hash{"$2$3"}}, $1; 
+                push @{$mp_hash{"$2\_$3"}}, $1; 
+            }
+            
+          # push @min_pairs, $1;
+        }
+
+         if($line{'trans_b'}=~/\[((.*)[IE]:?(.*))\]/){
+            # print $1;
+            if(exists $cons_hash{"$2\_$3"}){
+                my $len= @{$cons_hash{"$2\_$3"}};
+                if($len == 1){
+                    my $temp= @{$cons_hash{"$2\_$3"}}[$len-1];
+                    if($temp ne $1){
+                        push @{$cons_hash{"$2\_$3"}}, $1; 
+                    }
+                }
+               
+            }else{
+                push @{$cons_hash{"$2\_$3"}}, $1; 
             }
             
           # push @min_pairs, $1;
@@ -78,8 +95,21 @@ foreach my $key (sort keys %mp_hash){
     
 }
 
+print "cons hash below\n";
 
-# @min_pairs = sort { $a cmp $b} @min_pairs;
+foreach my $key (sort keys %cons_hash){
+    my $len=@{$cons_hash{$key}};
+    if($len>1){
+        print join ",\t", sort @{$cons_hash{$key}};
+        print "\n";
+    }
+    
+}
+
+
+
+
+# @min_pairs = sort { $-a cmp $b} @min_pairs;
 # @min_pairs= remove_duplicates(@min_pairs);
 
 # print join "\n", @min_pairs;
