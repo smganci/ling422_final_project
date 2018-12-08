@@ -1,25 +1,24 @@
 #!/usr/bin/perl
 ##########################
 #
-# hw5.pl
 #
 # This program should:
 # 	filter down to monosyllables
 #   determine missing sound
 #   input could first be specifically monosyllables with
 # goal 1:
-# make it filter just monosyllables with I or e 
+# make it filter just monosyllables with I or e
 # sort by pronunciation like rhyming dictionary
 
 # goal 2:
 # make software take input of two sounds and a *
-# TODO: modify script to select min pairs for both I and E 
+# TODO: modify script to select min pairs for both I and E
 #maybe group by 1st letter and sort by last?
 
 # S. Ganci * UNC-CH Ling 422 * 2018 Sept 10
 #
 ##########################
-use warnings; 
+use warnings;
 use utf8;
 use strict;
 #use List::MoreUtils qw(uniq);
@@ -38,9 +37,9 @@ while(<$file>){
     my $var = $_;
     chomp $var;
     my  %line= processLine($var);
-    
+
     # foreach my $key (sort keys %line){
-    #    print "$key => $line{$key} \n"; 
+    #    print "$key => $line{$key} \n";
     # }
 
     if(syll_count($line{'cv_skeleton'})==1){
@@ -87,7 +86,7 @@ sub processLine {
 sub remove_duplicates {
     my @original= @_;
     my @out;
-    foreach my $elt (@original){ 
+    foreach my $elt (@original){
         if(@out==0){
             push @out, $elt;
         }else{
