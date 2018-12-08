@@ -25,7 +25,7 @@ my $file_arg;
 
 my $file;
 open $file, '<',"$file_arg" or die "can't find file named $file_arg\n";
-
+my $cons = "pbfvwfvTDtdsznmlSZrjkgNh*\'";
 my @min_pairs;
 my %mp_hash;
 my %cons_hash;
@@ -46,7 +46,7 @@ while(<$file>){
         # my $_=$line{'trans_b'}
         #change to trans]
         # print $line{'trans_b'};
-        if($line{'trans_b'}=~/\[((.*)[IE]:?([nm]))\]/){
+        if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([nmN][$cons]*?))\]/){
             # print $1;
             if(exists $mp_hash{"$2\_$3"}){
                 my $len= @{$mp_hash{"$2\_$3"}};
@@ -64,7 +64,7 @@ while(<$file>){
           # push @min_pairs, $1;
         }
 
-         if($line{'trans_b'}=~/\[((.*)[IE]:?(.*))\]/){
+         if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([$cons*]))\]/){
             # print $1;
             if(exists $cons_hash{"$2\_$3"}){
                 my $len= @{$cons_hash{"$2\_$3"}};
@@ -106,7 +106,19 @@ foreach my $key (sort keys %cons_hash){
     
 }
 
+print "common words\n";
 
+foreach my $key (sort keys %mp_hash){
+    my $len=@{$mp_hash{$key}};
+    if(($len>1) && exists $cons_hash{$key} && (@{$cons_hash{$key}} >1)){
+        print "new row\n";
+        print join ",\t", sort @{$mp_hash{$key}};
+        print "\n";
+        print join ",\t", sort @{$cons_hash{$key}};
+        print "\n";
+    }
+    
+}
 
 
 # @min_pairs = sort { $-a cmp $b} @min_pairs;
