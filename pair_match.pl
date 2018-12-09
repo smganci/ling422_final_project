@@ -1,56 +1,65 @@
 #!/usr/bin/perl
-##########################
+################################################################################
 #
-# hw5.pl
+# Name: pair_match
 #
-# This program should:
-# 	filter down to monosyllables
-#   determine missing sound
-#   input could first be specifically monosyllables with
-# min pairs by first and last letter with only i and e
-# have a hash of first and last letter
-# hash from first and last to list of words
-# remove duplicates from the list
-# only output the hash lists with more than one
-
-# S. Ganci * UNC-CH Ling 422 * 2018 Sept 10
+# Purpose:
 #
-##########################
+# Usage:
+#   to run this program you must have an EPW.CD file in the same folder
+#
+#
+# S. Ganci K. K. Elhajoui * UNC-CH Ling 422 * 2018 Dec 98
+#
+################################################################################
 use warnings; 
 use utf8;
 use strict;
 
-my $file_arg;
-($file_arg)=$ARGV[0];
 
+
+# Open the EPW.CD file
 my $file;
-open $file, '<',"$file_arg" or die "can't find file named $file_arg\n";
+open $file, '<',"EPW.CD" or die "can't find file named EPW.CD\n";
+
+# $cons stores all consonents for futer use
 my $cons = "pbfvwfvTDtdsznmlSZrjkgNh*\'";
-my @min_pairs;
+
+# %mp_hash will store a hash:
+#   keys: onset_coda of monosyllable word
+#   value: an array of all of the words containing [IE] with that onset and coda
+# Note: coda can only be nasal
 my %mp_hash;
+
+# %cins_hash will store a hash:
+#   keys: onset_coda of monosyllable word
+#   value: an array of all of the words containing [IE] with that onset and coda
+# Note: coda can only be non nasal
 my %cons_hash;
+
+# Loop through entire file
 while(<$file>){
  
     my $var = $_;
     chomp $var;
+
+    # Call processLine to generate a feature hash 
     my  %line= processLine($var);
     
-    
-##consonant clusters
-# another if
-##idea: could store hash of every first letter
-#add in some sort of class to account for the clusters igrnor other vowels
-#add more than just mono syllables
-#maybe gives actual word
+    # Check to see if monosyllable
     if(syll_count($line{'cv_skeleton'})==1){
-        # my $_=$line{'trans_b'}
-        #change to trans]
-        # print $line{'trans_b'};
+
+        # Check match for mp_hash
         if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([nmN][$cons]*?))\]/){
-            # print $1;
+
+            # Check if key is already in hash 
             if(exists $mp_hash{"$2\_$3"}){
+
+                # Check the length of array in hash
                 my $len= @{$mp_hash{"$2\_$3"}};
                 if($len == 1){
+
+                    # Check to see if item has already been entered
                     my $temp= @{$mp_hash{"$2\_$3"}}[$len-1];
                     if($temp ne $1){
                         push @{$mp_hash{"$2\_$3"}}, $1; 
@@ -58,73 +67,88 @@ while(<$file>){
                 }
                
             }else{
+                # Push entry on list for key
                 push @{$mp_hash{"$2\_$3"}}, $1; 
             }
-            
-          # push @min_pairs, $1;
+
         }
 
-         if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([$cons*]))\]/){
-            # print $1;
+        # Check match for cons_hash
+        if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([$cons*]))\]/){
+
+            # Check if key is already in hash 
             if(exists $cons_hash{"$2\_$3"}){
+
+                # Check the length of array in hash
                 my $len= @{$cons_hash{"$2\_$3"}};
                 if($len == 1){
                     my $temp= @{$cons_hash{"$2\_$3"}}[$len-1];
+
+                    # Check to see if item has already been entered
                     if($temp ne $1){
                         push @{$cons_hash{"$2\_$3"}}, $1; 
                     }
                 }
-               
+                
             }else{
+                # Push entry on list for key
                 push @{$cons_hash{"$2\_$3"}}, $1; 
-            }
-            
-          # push @min_pairs, $1;
+            }       
         }
     }
-
-
 }
 
+
+# For every key in mp_hash
+my $count=1;
 foreach my $key (sort keys %mp_hash){
+
+    # Check to see if there is more than one item in the array
     my $len=@{$mp_hash{$key}};
-    if($len>1){
-        print join ",\t", sort @{$mp_hash{$key}};
-        print "\n";
-    }
-    
+    if(($len>1)){
+
+        # Store onset for future comparison
+        my $ons;
+        if($key=~/(.*_)/){
+            $ons=$1;    
+        }        
+        
+
+        my $out="";
+
+        # For every key in cons hash
+        foreach my $key2 (sort keys %cons_hash){
+            my $len2=@{$cons_hash{$key2}};
+
+            # Check if length is more than one
+            if($len2>1){
+
+                # Check to see if onset matches key
+                if($key2=~"^$ons" && $key ne $key2){
+                    # Add to output
+                    $out.="--------------------\n";
+                    $out.= join ",\t", sort @{$cons_hash{$key2}};
+                    $out.="\n"
+                    
+                }
+            }          
+        }
+
+        # If there are matches to the nasal pair (len(out)>0) then print
+        if(length($out)>0){
+            print("$count.\n");
+            print("~~~~ Nasal Pair ~~~~\n--------------------\n");
+            print join ",\t", sort @{$mp_hash{$key}};
+            print "\n\n";
+            print"~~~~~~ Matches ~~~~~\n";
+            print $out;
+            print "\n\n\n";
+            $count++;
+        }
+        
+    }  
 }
 
-print "cons hash below\n";
-
-foreach my $key (sort keys %cons_hash){
-    my $len=@{$cons_hash{$key}};
-    if($len>1){
-        print join ",\t", sort @{$cons_hash{$key}};
-        print "\n";
-    }
-    
-}
-
-print "common words\n";
-
-foreach my $key (sort keys %mp_hash){
-    my $len=@{$mp_hash{$key}};
-    if(($len>1) && exists $cons_hash{$key} && (@{$cons_hash{$key}} >1)){
-        print "new row\n";
-        print join ",\t", sort @{$mp_hash{$key}};
-        print "\n";
-        print join ",\t", sort @{$cons_hash{$key}};
-        print "\n";
-    }
-    
-}
-
-
-# @min_pairs = sort { $-a cmp $b} @min_pairs;
-# @min_pairs= remove_duplicates(@min_pairs);
-
-# print join "\n", @min_pairs;
 
 ###############################################
 ##Subroutines
