@@ -28,7 +28,7 @@ my $file_arg;
 my $file; #basically STDIN
 open $file, '<',"$file_arg" or die "can't find file named $file_arg\n";
 
-my @cons = "pbfvwfvTDtdsznmlSZrjkgNh*\'";
+my $cons = "pbfvwfvTDtdsznmlSZrjkgNh*\'";
 my @min_pairs;
 my %mp_hash;
 while(<$file>){
