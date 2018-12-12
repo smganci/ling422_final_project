@@ -1,15 +1,17 @@
 #!/usr/bin/perl
 ################################################################################
 #
-# Name: pair_match
+# Name: near_min_pairs_clusters.pl
 #
-# Purpose:
+# Purpose: find all minimal pairs featuring pre-nasal [I|E] in monosyllables
+#          and match those pairs with additional NEAR-MIMINAL pairs in which
+#          [I|E] are NOT pre-nasal.
 #
 # Usage:
 #   to run this program you must have an EPW.CD file in the same folder
 #
 #
-# S. Ganci K. K. Elhajoui * UNC-CH Ling 422 * 2018 Dec 98
+# S. Ganci & K. Elhajoui * UNC-CH Ling 422 * 2018 Dec 98
 #
 ################################################################################
 use warnings;

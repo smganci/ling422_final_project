@@ -1,15 +1,17 @@
 #!/usr/bin/perl
 ################################################################################
 #
-# Name: pair_match
+# Name: min_pairs.pl
 #
-# Purpose:
+# Purpose: find all minimal pairs featuring pre-nasal [I|E] in monosyllables
+#          and match those pairs with additional minimal pairs in which
+#          [I|E] are NOT pre-nasal.
 #
 # Usage:
 #   to run this program you must have an EPW.CD file in the same folder
 #
 #
-# S. Ganci K. K. Elhajoui * UNC-CH Ling 422 * 2018 Dec 98
+# S. Ganci & K. Elhajoui * UNC-CH Ling 422 * 2018 Dec 98
 #
 ################################################################################
 use warnings;
@@ -51,7 +53,7 @@ while(<$file>){
     if(syll_count($line{'cv_skeleton'})==1){
 
         # Check match for mp_hash
-        if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([nmN][$cons]*?))\]/){
+        if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([nmN]))\]/){
           #my $freq = $line{'frequency'};
 
             # Check if key is already in hash
@@ -78,7 +80,7 @@ while(<$file>){
         }
 
         # Check match for cons_hash
-        if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([$cons]*))\]/){
+        if($line{'trans_b'}=~/\[(([$cons]*)[IE]:?([$cons*]))\]/){
 
             # Check if key is already in hash
             if(exists $cons_hash{"$2\_$3"}){
